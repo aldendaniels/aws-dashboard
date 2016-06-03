@@ -5,7 +5,6 @@
 
 var express = require('express');
 var _ = require('underscore');
-var kMeans = require('kmeans-js');
 var dataService = require('../services/data-service');
 
 var router = express.Router();

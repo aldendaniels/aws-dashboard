@@ -6,13 +6,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('hbs');
-var expressSession = require('express-session');
+var session = require('express-session');
 var flash = require('connect-flash');
 
 
 // Load our routes
 var config = require('./config');
 var routes = require('./routes/index');
+var home = require('./routes/home');
 var api = require('./routes/api');
 
 var app = express();
@@ -29,10 +30,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use(session(
+    {
+        secret: 'eWbJpWBhCZQUFko4KTXQaAQb6fcLfW',
+        saveUninitialized: false,
+        resave: false
+    }
+));
 
-// Everything below the "restrict" will require login
-app.use(restrict);
+app.use(flash());
+app.use('/', routes);
 app.use('/home', home);
 app.use('/api', api);
 

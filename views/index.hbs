@@ -1,26 +1,86 @@
-<div class = "container">
-  <div class="wrapper">
-    <form class="form-signin" name="login-form" id="login-form" method="post" action="/users/login">
-        <h3 class="form-signin-heading">Please Sign In</h3>
-        <hr class="colorgraph"><br>
+<div class="row">
+  <div class="col-sm-3">
+    {{> sidebar}}
+  </div>
+  <div class="col-sm-9">
+    <div class="jumbotron">
+      <h1>Trey's Tech Demo</h1>
+      <p>I created this demo to show a variety of technologies and how they fit together.
+      This should serve as a good way to look at data-centric algorithm as well.
+      </p>
+      <p>
+        <a class="btn btn-primary" target="_blank" href="#/kmeans" role="button">View K-Means Clustering Demo <span class="fa fa-angle-double-right text-info"></span></a>
+      </p>
+    </div>
 
-        <input type="text" class="form-control" name="email" placeholder="email" type="email" required autofocus="" />
-        <input type="password" class="form-control" name="password" placeholder="Password" required />
-        <div class="form-group" style="margin-left: 20px; margin-right: 20px;">
-            <strong>Stay Logged In</strong>
-            <div class="material-switch pull-right">
-                <input id="rememberMe" name="rememberMe" type="checkbox" checked />
-                <label for="rememberMe" class="label-success"></label>
+    <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-primary technology-list">
+        <div class="panel-heading">Built With</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-4">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <span class="badge">v5.10.1</span>
+                  <em class="icon-nodejs"></em>
+                  Node.JS
+                </li>
+                <li class="list-group-item">
+                  <span class="badge">v4.13.4</span>
+                  <em class="icon-express"></em>
+                  Express
+                </li>
+                <li class="list-group-item">
+                  <span class="badge">v2.1.10</span>
+                  <em class="icon-mongodb"></em>
+                  MongoDB
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <span class="badge">v1.4.5</span>
+                  <em class="icon-angular"></em>
+                  AngularJS
+                </li>
+                <li class="list-group-item">
+                  <span class="badge">v3.3.4</span>
+                  <em class="icon-bootstrap"></em>
+                  Bootstrap
+                </li>
+                <li class="list-group-item">
+                  <span class="badge">v0.3.2</span>
+                  <i class="fa fa-users"></i>
+                  PassportJS
+                </li>
+                
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <span class="badge">v1.11.2</span>
+                  <em class="icon-jquery-alt"></em>
+                  jQuery
+                </li>
+                <li class="list-group-item">
+                  <span class="badge">v4.2.3</span>
+                  <i class="fa fa-line-chart"></i>
+                  High Charts
+                </li>
+                <li class="list-group-item">
+                  <span class="badge">v0.1.2</span>
+                  <i class="fa fa-qrcode"></i>
+                  K-Means NPM
+                </li>
+              </ul>
             </div>
           </div>
-        {{#if error}}
-        <p class="text-center text-danger">{{error}}</p>
-        {{/if}}
-        <button class="btn btn-lg btn-primary btn-block"  name="submit" value="Log in" type="submit">Login</button>
-
-        <p class="text-center login-link">
-          <a href="/users/create" class='text-primary'>Don't have an account? Sign up here.</a>
-        </p>
-    </form>
+        </div>
+      </div>
+    </div>
+    </div>
   </div>
 </div>

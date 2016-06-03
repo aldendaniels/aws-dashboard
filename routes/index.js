@@ -8,7 +8,8 @@ router.get('/', function(req, res, next) {
   }
   var vm = {
     title: 'Login',
-    error: req.flash('error')
+    error: req.flash('error'),
+    name: 'Testing Still'
   }
 
   res.render('index', vm);
