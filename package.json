@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "aws-sdk": "^2.3.17",
     "body-parser": "^1.15.0",
     "chai": "^3.5.0",
     "connect-flash": "^0.1.1",
