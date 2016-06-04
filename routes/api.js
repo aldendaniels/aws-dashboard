@@ -13,14 +13,15 @@ var router = express.Router();
 /**
  * Load the Kmeans API Data
  */
-router.get('/load/:sample/:clusters', function(req, res, next) {
+router.get('/updateServers', function(req, res, next) {
+    
+    awsService.getRunningServers()
+    // Pass the data to the view
+    vm = {
+        servers: ['thisOne','thatOne']
+    }
 
-  // Pass the data to the view
-  vm = {
-    servers: awsService.getRunningServers('someId')
-  }
-
-  return res.json(vm);
+    return res.json(vm);
 });
 
 module.exports = router;

@@ -1,0 +1,17 @@
+var config = {};
+
+// NOTE: AWS user/secret credentials must be  stored in the standard
+// ~/.aws/credentials file. We will use the [default] user in that file.
+config.aws = {
+    EC2Region: 'us-east-1'
+};
+
+config.postgres = {
+    username: '[USERNAME]',
+    password: '[PASSWORD]',
+    database: '[DATABASE]',
+    hostname: '[HOSTNAME]',
+    port: '[PORT]'
+};
+
+module.exports = config;
