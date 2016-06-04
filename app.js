@@ -13,7 +13,6 @@ var flash = require('connect-flash');
 // Load our routes
 var config = require('./config');
 var routes = require('./routes/index');
-var home = require('./routes/home');
 var api = require('./routes/api');
 
 var app = express();
@@ -40,7 +39,6 @@ app.use(session(
 
 app.use(flash());
 app.use('/', routes);
-app.use('/home', home);
 app.use('/api', api);
 
 // catch 404 and forward to error handler
