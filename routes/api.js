@@ -25,8 +25,11 @@ router.get('/updateServers', function(req, res, next) {
     return res.json(vm);
 });
 
-router.get('/repos/:username', function(req, res, next){
-    var repos = githubService.getRepositories(req.params.username, next);
+router.get('/commits/:username/:repo', function(req, res, next){
+    var repos = githubService.getCommits(
+        req.params.username, 
+        req.params.repo,
+        next);
 
     vm = {
         repos: repos

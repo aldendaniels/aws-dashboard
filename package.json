@@ -16,10 +16,10 @@
     "debug": "^2.2.0",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
-    "github-api": "^2.2.0",
     "hbs": "^4.0.0",
     "morgan": "^1.7.0",
-    "pg": "^4.5.6",
+    "octonode": "^0.7.6",
+    "pg-promise": "^4.4.3",
     "underscore": "^1.8.3"
   }
 }
