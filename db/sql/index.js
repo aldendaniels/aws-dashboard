@@ -3,7 +3,7 @@ var QueryFile = require('pg-promise').QueryFile;
 // Helper for linking to external query files;
 function sql(file) {
 
-    var path = './db/sql/' + file;
+    var path = __dirname + '/' + file;
 
     var options = {
 
