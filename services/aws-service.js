@@ -1,5 +1,4 @@
 var config = require('../config.js');
-var logger = require('morgan');
 var AWS = require('aws-sdk');
 AWS.config.setPromisesDependency(require('bluebird'));
 var ec2 = new AWS.EC2({region: config.aws.EC2Region});
@@ -13,7 +12,7 @@ var db = require('../db').db;
  * @param      {number}  sampleSize population size
  * @return     {Array}   launch command status
  */
-exports.launchAMI = function(gitCommit) {
+exports.launchAMI = function(gitCommit, next) {
 
   var params = {
     ImageId: 'ami-1624987f', // Amazon Linux AMI x86_64 EBS
@@ -36,43 +35,42 @@ exports.launchAMI = function(gitCommit) {
       console.log("Tagging instance", err ? "failure" : "success");
     });
   });
-
-  return launchStatus;
 };
 
 /**
- * Fetches current running servers, stats, and saves to Database
+ * Fetches current running servers, stats, and saves to database
  *
  * @method     updateRunningServers
  * @return     none
  */
-exports.updateRunningServers = function() {
+exports.updateRunningServers = function(next) {
 
     // The describeInstanceStatus returns the current status of all ec2 instances
     // in the current region (Note the config.awsEC2Region) running or not.
-    ec2.describeInstanceStatus({IncludeAllInstances:true},function(err, data) {
-        if (err) {
-          // We were unable to call the AWS API, log and move on
-          console.log(err);
+    var promise = ec2.describeInstanceStatus({IncludeAllInstances:true}).promise();
 
-        } else {
+    promise.then(
+        function(data) {
+            data.InstanceStatuses.forEach(function (status) {
 
-          data.InstanceStatuses.forEach(function (status) {
-
-            db.servers.upsert({
-                instance_id: status.InstanceId,
-                availability_zone: status.AvailabilityZone,
-                status: status.InstanceStatus.Status,
-                state: status.InstanceState.Name,
-                system_status: status.SystemStatus.Status
-            }).then(function (data) {
-                console.log(data);
-            })
-            .catch(function (error) {
-                console.log(error);
+                db.servers.upsert({
+                    instance_id: status.InstanceId,
+                    availability_zone: status.AvailabilityZone,
+                    status: status.InstanceStatus.Status,
+                    state: status.InstanceState.Name,
+                    system_status: status.SystemStatus.Status
+                }).then(function (data) {
+                    // Do something?
+                })
+                .catch(function (err) {
+                    return next(err);
+                });
             });
+        },
+        function(err) {
+            next(err);
+        } 
+    );
 
-          });
-        }
-  });
+    return promise;
 };

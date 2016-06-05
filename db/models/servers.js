@@ -8,19 +8,13 @@ module.exports = rep => {
         create: () => rep.none(sql.create),
 
         // Returns all server records
-        all: () => rep.any('SELECT * FROM ec2_servers'),
+        all: () => rep.any('SELECT * FROM ec2_servers ORDER BY created ASC'),
 
         // Insert or update a record
-        upsert: values => rep.one(sql.upsert,values)
+        upsert: values => rep.none(sql.upsert,values),
 
         // Tries to find a product from id;
-        //find: id => rep.oneOrNone('SELECT * FROM Products WHERE id = $1', id),
-
-        
-
-        // Returns the total number of products;
-        //total: () => rep.one('SELECT count(*) FROM Products')
-        //    .then(data => parseInt(data.count))
+        find: id => rep.oneOrNone('SELECT * FROM ec2_servers WHERE instance_id = $1', id)
 
     };
 };

@@ -6,6 +6,7 @@
 var express = require('express');
 var _ = require('underscore');
 var awsService = require('../services/aws-service');
+var githubService = require('../services/github-service');
 
 // Load the express router
 var router = express.Router();
@@ -15,11 +16,21 @@ var router = express.Router();
  */
 router.get('/updateServers', function(req, res, next) {
     
-    awsService.getRunningServers()
+    awsService.updateRunningServers(next);
     // Pass the data to the view
     vm = {
-        servers: ['thisOne','thatOne']
-    }
+        status: 'ok'
+    };
+
+    return res.json(vm);
+});
+
+router.get('/repos/:username', function(req, res, next){
+    var repos = githubService.getRepositories(req.params.username, next);
+
+    vm = {
+        repos: repos
+    };
 
     return res.json(vm);
 });
