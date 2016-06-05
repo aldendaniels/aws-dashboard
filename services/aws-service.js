@@ -63,7 +63,12 @@ exports.updateRunningServers = function(next) {
                     // Do something?
                 })
                 .catch(function (err) {
-                    return next(err);
+                    // If we are calling from the cron side we just need to log errors
+                    if(next){
+                        return next(err);
+                    } else {
+                        console.log(err);
+                    }
                 });
             });
         },

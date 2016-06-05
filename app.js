@@ -9,6 +9,9 @@ var hbs = require('hbs');
 var session = require('express-session');
 var flash = require('connect-flash');
 
+// Recurring CRON-like scheduled tasks
+var tasks = require('./tasks');
+
 
 // Load our routes
 var config = require('./config');
@@ -71,6 +74,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
