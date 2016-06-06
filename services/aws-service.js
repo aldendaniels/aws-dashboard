@@ -76,7 +76,12 @@ exports.updateRunningServers = function(next) {
             return data;
         },
         function(err) {
-            return next(err);
+            if(next){
+                return next(err); 
+            } else {
+                console.log(err);
+            }
+            
         } 
     );
 
