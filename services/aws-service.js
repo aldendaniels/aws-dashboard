@@ -47,9 +47,10 @@ exports.updateRunningServers = function(next) {
 
     // The describeInstanceStatus returns the current status of all ec2 instances
     // in the current region (Note the config.awsEC2Region) running or not.
-    var promise = ec2.describeInstanceStatus({IncludeAllInstances:true}).promise();
+    // This is a promise.
+    var runningServers = ec2.describeInstanceStatus({IncludeAllInstances:true}).promise();
 
-    promise.then(
+    runningServers.then(
         function(data) {
             data.InstanceStatuses.forEach(function (status) {
 
@@ -60,7 +61,7 @@ exports.updateRunningServers = function(next) {
                     state: status.InstanceState.Name,
                     system_status: status.SystemStatus.Status
                 }).then(function (data) {
-                    // Do something?
+                    // No data is returned from the upsert
                 })
                 .catch(function (err) {
                     // If we are calling from the cron side we just need to log errors
@@ -71,11 +72,14 @@ exports.updateRunningServers = function(next) {
                     }
                 });
             });
+
+            return data;
         },
         function(err) {
-            next(err);
+            return next(err);
         } 
     );
 
-    return promise;
+    // Return the promise
+    return runningServers;
 };

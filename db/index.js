@@ -2,22 +2,24 @@ var config = require('../config.js');
 var promise = require('bluebird');
 
 var models = {
-    servers: require('./models/servers')
+    servers: require('./models/servers'),
+    commits: require('./models/commits')
 };
 
 var options = {
     promiseLib: promise,
     extend: obj => {
-        // Do not use 'require()' here, because this event occurs for every task
+        // We don't not use 'require()' here, because this event occurs for every task
         // and transaction being executed, which should be as fast as possible.
         obj.servers = models.servers(obj);
+        obj.commits = models.commits(obj);
     }
 };
 
 var pgp = require("pg-promise")(options);
 
 var cn = {
-    host: config.postgres.hostname, // server name or IP address;
+    host: config.postgres.hostname,
     port: config.postgres.port,
     database: config.postgres.database,
     user: config.postgres.username,

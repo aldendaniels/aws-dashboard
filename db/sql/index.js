@@ -29,5 +29,9 @@ module.exports = {
     servers: {
         create: sql('servers/create.sql'),
         upsert: sql('servers/upsert.sql')
+    },
+    commits: {
+        create: sql('commits/create.sql'),
+        insert: sql('commits/insert.sql')
     }
 };

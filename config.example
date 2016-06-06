@@ -6,6 +6,7 @@ config.aws = {
     EC2Region: 'us-east-1'
 };
 
+// Postgres connection details
 config.postgres = {
     username: '[USERNAME]',
     password: '[PASSWORD]',
@@ -13,5 +14,11 @@ config.postgres = {
     hostname: '[HOSTNAME]',
     port: '[PORT]'
 };
+
+// Github credentials
+config.github = {
+    username: '[USERNAME]',
+    password: '[PASSWORD]'
+}
 
 module.exports = config;

@@ -1,6 +1,6 @@
 /*
  * API Route
- * The collection functions handling the api calls
+ * The collection of functions handling the api calls
  */
 
 var express = require('express');
@@ -12,7 +12,7 @@ var githubService = require('../services/github-service');
 var router = express.Router();
 
 /**
- * Load the Kmeans API Data
+ * API endpoint that allows us to manually update the server object
  */
 router.get('/updateServers', function(req, res, next) {
     
@@ -25,17 +25,32 @@ router.get('/updateServers', function(req, res, next) {
     return res.json(vm);
 });
 
+/**
+* List the commits for a given username and repo
+*/
 router.get('/commits/:username/:repo', function(req, res, next){
-    var repos = githubService.getCommits(
+    var getCommits = githubService.getCommits(
         req.params.username, 
         req.params.repo,
         next);
 
-    vm = {
-        repos: repos
-    };
+    getCommits.then(function(data){
+        var commits = [];
 
-    return res.json(vm);
+        data.forEach(function(commit){
+            commits.push({
+                sha: commit.sha,
+                login: commit.committer.login,
+                avatar_url: commit.committer.avatar_url,
+                name: commit.commit.committer.name,
+                date: commit.commit.committer.date,
+                message: commit.commit.message
+            });
+        });
+
+        return res.json(commits);
+    });
 });
+
 
 module.exports = router;

@@ -1,5 +1,7 @@
+var Promise = require('bluebird');
 var config = require('../config.js');
 var db = require('../db').db;
+
 var github = require('octonode');
 var client = github.client({
   username: config.github.username,
@@ -17,18 +19,40 @@ exports.getCommits = function(username, repo, next) {
 
     var repo = client.repo(username+'/'+repo);
 
-    repo.commits(function(err,data){
-        if(err){
-            return next(err);
-        }
+    // Promisify this function so that we can pass around promises per
+    // our desire to do so, because sweet sweet promises.
+    var getCommits = Promise.promisify(repo.commits,{context: repo});
 
+    getCommits().then(function(data){
+
+        // Save each commit to the database
         data.forEach(function(commit){
-            console.log(commit.sha);
-            console.log(commit.committer.login);
-            console.log(commit.committer.avatar_url);
-            console.log(commit.commit.committer.name);
-            console.log(commit.commit.committer.date);
-            console.log(commit.commit.message);
+            db.commits.insert({
+                sha: commit.sha,
+                login: commit.committer.login,
+                avatar_url: commit.committer.avatar_url,
+                name: commit.commit.committer.name,
+                date: commit.commit.committer.date,
+                message: commit.commit.message,
+                repository: repo,
+                username: username
+            }).then(function(data){
+                //console.log(data);
+            }).catch(function(err){
+                console.log(err);
+            });
         });
+
+        return data;
+
+    }).catch(function(err) {
+        // Next is only not present here if we are calling from Mocha
+        if(next){
+            return next(err);
+        } else {
+            console.log(err);
+        }
     });
+
+    return getCommits();
 };
