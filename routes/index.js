@@ -6,22 +6,29 @@ var aws = require('../services/aws-service');
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-    db.servers.all().then(function (data) {
 
+    // Get the servers and commits from the database
+    db.servers.all().then(function(servers){
+        return [servers,db.commits.all()];
+
+    // The spread function lets us pass forward values
+    // alongside our promises
+    }).spread(function(servers,commits){
+       
         var vm = {
-            servers: data,
             title: 'Home',
+            servers: servers,
+            commits: commits,
             error: req.flash('error'),
-            name: 'Hey You'
-          }
+        };
 
         res.render('index', vm);
-    })
-    .catch(function (err) {
+
+    }).catch(function(err){
         return next(err);
     });
 
+    
+
 });
-
-
 module.exports = router;

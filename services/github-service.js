@@ -28,20 +28,20 @@ exports.getCommits = function(username, repository, next) {
 
         // Save each commit to the database
         data.forEach(function(commit){
-            // db.commits.insert({
-            //     sha: commit.sha,
-            //     login: commit.committer.login,
-            //     avatar_url: commit.committer.avatar_url,
-            //     name: commit.commit.committer.name,
-            //     date: commit.commit.committer.date,
-            //     message: commit.commit.message,
-            //     repository: repository,
-            //     username: username
-            // }).then(function(data){
-            //     //console.log(data);
-            // }).catch(function(err){
-            //     console.log(err);
-            // });
+            db.commits.insert({
+                sha: commit.sha,
+                commit_author: commit.committer.login,
+                avatar_url: commit.committer.avatar_url,
+                author_name: commit.commit.committer.name,
+                date: commit.commit.committer.date,
+                message: commit.commit.message,
+                repository: repository,
+                owner: username
+            }).then(function(data){
+                //console.log(data);
+            }).catch(function(err){
+                console.log(err);
+            });
         });
 
         return data;
