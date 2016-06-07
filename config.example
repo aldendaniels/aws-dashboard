@@ -4,6 +4,7 @@ var config = {};
 // ~/.aws/credentials file. We will use the [default] user in that file.
 config.aws = {
     EC2Region: 'us-east-1'
+    instanceSize: 't2.micro'
 };
 
 // Postgres connection details
