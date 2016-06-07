@@ -14,8 +14,9 @@ var db = require('../db').db;
  * @param      {gitCommit}  sha1 hash of the git commit we want to check out
  * @return     {Promise}    return the promise object of the launch command
  */
-exports.launchAMI = function(username, repo, commit, dryRun, next) {
+exports.launchAMI = function(username, repo, commit, instanceName, dryRun, next) {
 
+    // TODO: Security on all this, DANGER DANGER DANGER!
     var commands = new Buffer(`#!/bin/bash
         echo -e "https://github.com/${username}/${repo}.git" > repo
         echo -e "${commit}" > commitcheck
@@ -44,14 +45,16 @@ exports.launchAMI = function(username, repo, commit, dryRun, next) {
 
     // Run an instance and tag it once it is available
     runInstances.then(function(data) {
+
+        console.log(data);
         
         return ec2.createTags({
             Resources: [data.Instances[0].InstanceId], Tags: [
-                {Key: 'Name', Value: 'instanceName'}
+                {Key: 'Name', Value: instanceName}
         ]}).promise();
 
     }).then(function(data){
-        // console.log("Tagging instance success");
+        console.log(data);
     }).catch(function(err){
         if(next){
             return next(err);

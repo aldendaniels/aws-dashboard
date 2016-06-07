@@ -9,5 +9,24 @@
         <div class="fading-side-menu" data-spy="affix" data-offset-top="350">
     </div>
 
+    <form action="/api/launch" method="post">
+      <div class="form-group">
+        <label for="instanceName">Name for Instance</label>
+        <input type="text" class="form-control" name="instanceName" id="instanceName" placeholder="Web Head 1">
+      </div>
+
+      <input type="hidden" value="treyreynolds" name="owner" id="owner">
+      <input type="hidden" value="node-helloworld" name="repository" id="repository">
+
+      <div class="form-group">
+        <label for="instanceName">Select Commit</label>
+        <select class="form-control" name="commit" id="commit">
+        {{#each c}}
+          <option value="{{this.sha}}">{{this.author_name}} - {{this.message}}</option>
+        {{/each}}
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-default btn-block">Submit</button>
   </div>
 </div>
