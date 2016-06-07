@@ -14,8 +14,9 @@ var db = require('../db').db;
  * @param      {gitCommit}  sha1 hash of the git commit we want to check out
  * @return     {Promise}    return the promise object of the launch command
  */
-exports.launchAMI = function(username, repo, commit, next) {
+exports.launchAMI = function(username, repo, commit, instanceName, dryRun, next) {
 
+    // TODO: Security on all this, DANGER DANGER DANGER!
     var commands = new Buffer(`#!/bin/bash
         echo -e "https://github.com/${username}/${repo}.git" > repo
         echo -e "${commit}" > commitcheck
@@ -27,6 +28,7 @@ exports.launchAMI = function(username, repo, commit, next) {
         node app.js`).toString('base64');
 
     var imageParams = {
+        DryRun: dryRun,
         ImageId: 'ami-83f50cee', // Custom image created as baseline
         InstanceType: config.aws.instanceSize,
         MinCount: 1, 
@@ -43,16 +45,22 @@ exports.launchAMI = function(username, repo, commit, next) {
 
     // Run an instance and tag it once it is available
     runInstances.then(function(data) {
+
+        console.log(data);
         
         return ec2.createTags({
             Resources: [data.Instances[0].InstanceId], Tags: [
-                {Key: 'Name', Value: 'instanceName'}
-        ]});
+                {Key: 'Name', Value: instanceName}
+        ]}).promise();
 
     }).then(function(data){
-        console.log("Tagging instance success");
+        console.log(data);
     }).catch(function(err){
-        return next(err);
+        if(next){
+            return next(err);
+        } else {
+            // console.log(err);
+        }
     });
 
     return runInstances
@@ -71,21 +79,23 @@ exports.updateRunningServers = function(next) {
     // This is a promise.
     var runningServers = ec2.describeInstanceStatus({IncludeAllInstances:true}).promise();
 
-    // Chain the promises to get the full instance data because the describeInstances
-    // api method doesn't return stopped servers
+
     runningServers.then(function(data) {
+
+        // Get all instance ids with an active status
         var instanceIds = data.InstanceStatuses.map(function(a) {return a.InstanceId;});
-        return ec2.describeInstances({InstanceIds:instanceIds}).promise();
-    }).then(function(data){
+        return [instanceIds,ec2.describeInstances({InstanceIds:instanceIds}).promise()];
+
+    }).spread(function(instanceIds, data){
 
         data.Reservations.forEach(function(reservation){
             reservation.Instances.forEach(function(instance){
-                
+
                 db.servers.upsert({
                     instance_id: instance.InstanceId,
                     availability_zone: instance.Placement.AvailabilityZone,
                     state: instance.State.Name,
-                    public_ip: instance.PublicDnsName,
+                    public_ip: instance.PublicIpAddress,
                     public_url: instance.PublicDnsName,
                     launch_time: instance.LaunchTime,
                     state_transition: instance.StateTransitionReason
@@ -96,8 +106,10 @@ exports.updateRunningServers = function(next) {
                     console.log(err);
 
                 });
-            })
-        })
+            });
+        });
+
+        //db.servers.deleteNonActive(instanceIds);
        
     }).catch(function(err){
         console.log(err);

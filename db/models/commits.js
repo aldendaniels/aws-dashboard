@@ -1,5 +1,9 @@
 var sql = require('../sql').commits; // Store the complicated SQL externally
 
+// Commit database interface
+// Fields:
+// sha, message, commit_author, author_name, avatar_url, repository, owner, created
+
 module.exports = rep => {
 
     return {
@@ -14,7 +18,9 @@ module.exports = rep => {
         find: id => rep.oneOrNone('SELECT * FROM commits WHERE sha = $1', id),
 
         // Returns commits per repository
-        findByRepository: repo => rep.any('SELECT * FROM commits WHERE repository = $1', repo),
+        findByOwnerAndRepo: values => rep.any(
+            'SELECT * FROM commits WHERE owner = ${owner} AND repository = ${repository}',
+            values),
 
         // Insert if not already present
         insert: values => rep.one(sql.insert,values)

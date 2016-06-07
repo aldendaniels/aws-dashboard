@@ -24,7 +24,6 @@ exports.getCommits = function(username, repository, next) {
     var getCommits = Promise.promisify(repo.commits,{context: repo});
 
     getCommits().then(function(data){
-        console.log(repo);
 
         // Save each commit to the database
         data.forEach(function(commit){
