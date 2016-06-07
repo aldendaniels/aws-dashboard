@@ -21,4 +21,15 @@ describe('Github Service', function() {
 
     });
 
+    // Test if the same number of rows exist in the database as the AWS call
+    describe('Get some commits',function() {
+        it('A known repo returns some commits', function() {
+            return gh.getCommits('treyreynolds', 'node-helloworld', null) 
+                .then(function(commits) {
+                    // Nested promises, not ideal, but workable
+                    assert(commits.length > 0, "A known repo has commits");
+                });
+        });
+    });
+
 });
