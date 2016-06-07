@@ -154,3 +154,97 @@ input[type="password"] {
 .btn-danger.btn-outline:hover {
     color: #fff;
 }
+
+
+.panel .server {
+  padding: 0px !important;
+}
+
+.panel .left-side {
+  padding-top: 5px;
+  padding-left: 20px;
+  padding-right: 0px;
+}
+
+.panel .right-card {
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+.server img {
+  width: 47%;
+}
+
+.server .stats {
+  margin-top: 5px;
+}
+
+.server .stats .list-group {
+  margin-bottom: 0px;
+}
+
+.list-group-item-danger {
+  background-color: #8c4848 !important;
+}
+
+.list-group-item-danger span.badge {
+  background-color: #4f282a !important;
+}
+
+.server .list-group-item span.badge {
+  background-color: #111;
+}
+
+.hand .list-group-item:first-child {
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.hand .list-group-item:last-child {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.panel-stopped {
+    border-color: #f39c12;
+}
+
+.panel-stopped>.panel-heading {
+    color: #ffffff;
+    background-color: #f39c12;
+    border-color: #f39c12;
+}
+
+.panel-stopped {
+    border-color: #e74c3c;
+}
+
+.panel-stopped>.panel-heading {
+    color: #ffffff;
+    background-color: #e74c3c !important;
+    border-color: #e74c3c !important;
+}
+
+.panel-running {
+    border-color: #18bc9c;
+}
+
+.panel-running>.panel-heading {
+    color: #ffffff;
+    background-color: #18bc9c !important;
+    border-color: #18bc9c !important;
+}
+
+.panel-terminated>.panel-heading {
+    color: #999;
+    background-color: #EEE !important;
+    border-color: #DDD !important;
+}
+
+.panel-stopping>.panel-footer,
+.panel-stopped>.panel-footer,
+.panel-terminated>.panel-footer {
+    color: #999;
+    background-color: #EEE !important;
+    border-color: #DDD !important;
+}

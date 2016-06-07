@@ -4,7 +4,24 @@
   </div>
   <div class="col-sm-9">
      {{#each servers}}
-        <h1>{{this.instance_id}} - {{this.state}} - {{this.last_updated}}</h1>
+      <div class="col-md-3">
+          <div class="panel text-center panel-default panel-{{this.state}}">
+            <div class="panel-heading">{{this.instance_id}}</div>
+            <div class="panel-body text-left server">
+              <div class="row stats">
+                <div class="col-xs-12">
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <span class="badge">Moments</span>
+                      <small class='text-muted'>Updated</small>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="panel-footer text-info">{{this.state}}</div>
+          </div>
+        </div>
       {{/each}}
   </div>
 </div>
