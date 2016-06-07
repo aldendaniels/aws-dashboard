@@ -71,21 +71,23 @@ exports.updateRunningServers = function(next) {
     // This is a promise.
     var runningServers = ec2.describeInstanceStatus({IncludeAllInstances:true}).promise();
 
-    // Chain the promises to get the full instance data because the describeInstances
-    // api method doesn't return stopped servers
+
     runningServers.then(function(data) {
+
+        // Get all instance ids with an active status
         var instanceIds = data.InstanceStatuses.map(function(a) {return a.InstanceId;});
-        return ec2.describeInstances({InstanceIds:instanceIds}).promise();
-    }).then(function(data){
+        return [instanceIds,ec2.describeInstances({InstanceIds:instanceIds}).promise()];
+
+    }).spread(function(instanceIds, data){
 
         data.Reservations.forEach(function(reservation){
             reservation.Instances.forEach(function(instance){
-                
+
                 db.servers.upsert({
                     instance_id: instance.InstanceId,
                     availability_zone: instance.Placement.AvailabilityZone,
                     state: instance.State.Name,
-                    public_ip: instance.PublicDnsName,
+                    public_ip: instance.PublicIpAddress,
                     public_url: instance.PublicDnsName,
                     launch_time: instance.LaunchTime,
                     state_transition: instance.StateTransitionReason
