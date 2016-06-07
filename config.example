@@ -22,4 +22,10 @@ config.github = {
     password: '[PASSWORD]'
 }
 
+// Deployment Repository
+config.deploymentRepo = {
+  owner: '[OWNER]',
+  repo: '[REPO]'
+}
+
 module.exports = config;
