@@ -25,7 +25,6 @@ describe('AWS', function() {
     });
 
     // Test if the same number of rows exist in the database as the AWS call
-    // TODO: set up test to only perform the AWS action once
     describe('EC2 Database Update',function() {
         it('Has the same number of instances as database rows', function() {
             return aws.updateRunningServers(null)
@@ -35,6 +34,25 @@ describe('AWS', function() {
                         assert.equal(awsResponse.InstanceStatuses.length,data.length,
                             'Different number of db rows and response');
                     });
+                });
+        });
+    });
+
+    // Test if we are able to create a dry run of the Launch AMI function
+    describe('Launch AMI Dry Run Test',function() {
+        it('Returns a value indicating the action would work', function() {
+
+            // Set up some sane testing parameters
+             var launchAMI = aws.launchAMI(
+                'treyreynolds', 
+                'node-helloworld', 
+                '93f56218ecd3d747310e02e1070e74b11f36039d',
+                true, // This is dry run
+                null);
+
+            return launchAMI.then(assert.fail)
+                .catch(function(e) {
+                    assert.equal(e.message, "Request would have succeeded, but DryRun flag is set.");
                 });
         });
     });

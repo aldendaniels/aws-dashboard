@@ -33,7 +33,8 @@ router.get('/launch/:username/:repo/:commit', function(req, res, next) {
     var launchAMI = awsService.launchAMI(
         req.params.username, 
         req.params.repo, 
-        req.params.commit, 
+        req.params.commit,
+        false, // This is not a dry run 
         next);
     
     launchAMI.then(function(data){

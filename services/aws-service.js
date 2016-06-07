@@ -14,7 +14,7 @@ var db = require('../db').db;
  * @param      {gitCommit}  sha1 hash of the git commit we want to check out
  * @return     {Promise}    return the promise object of the launch command
  */
-exports.launchAMI = function(username, repo, commit, next) {
+exports.launchAMI = function(username, repo, commit, dryRun, next) {
 
     var commands = new Buffer(`#!/bin/bash
         echo -e "https://github.com/${username}/${repo}.git" > repo
@@ -27,6 +27,7 @@ exports.launchAMI = function(username, repo, commit, next) {
         node app.js`).toString('base64');
 
     var imageParams = {
+        DryRun: dryRun,
         ImageId: 'ami-83f50cee', // Custom image created as baseline
         InstanceType: config.aws.instanceSize,
         MinCount: 1, 
@@ -47,12 +48,16 @@ exports.launchAMI = function(username, repo, commit, next) {
         return ec2.createTags({
             Resources: [data.Instances[0].InstanceId], Tags: [
                 {Key: 'Name', Value: 'instanceName'}
-        ]});
+        ]}).promise();
 
     }).then(function(data){
-        console.log("Tagging instance success");
+        // console.log("Tagging instance success");
     }).catch(function(err){
-        return next(err);
+        if(next){
+            return next(err);
+        } else {
+            // console.log(err);
+        }
     });
 
     return runInstances
@@ -98,8 +103,10 @@ exports.updateRunningServers = function(next) {
                     console.log(err);
 
                 });
-            })
-        })
+            });
+        });
+
+        //db.servers.deleteNonActive(instanceIds);
        
     }).catch(function(err){
         console.log(err);
