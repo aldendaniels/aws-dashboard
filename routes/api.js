@@ -26,6 +26,28 @@ router.get('/updateServers', function(req, res, next) {
 });
 
 /**
+ * Launch a server with a specific commit
+ */
+router.get('/launch/:username/:repo/:commit', function(req, res, next) {
+    
+    var launchAMI = awsService.launchAMI(
+        req.params.username, 
+        req.params.repo, 
+        req.params.commit, 
+        next);
+    
+    launchAMI.then(function(data){
+        vm = { status: 'ok'};
+
+        return res.json(vm);
+
+    }).catch(function(err){
+        return next(err);
+    });
+
+});
+
+/**
 * List the commits for a given username and repo
 */
 router.get('/commits/:username/:repo', function(req, res, next){

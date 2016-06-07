@@ -8,7 +8,7 @@ module.exports = rep => {
         create: () => rep.none(sql.create),
 
         // Returns all server records
-        all: () => rep.any('SELECT * FROM ec2_servers ORDER BY created ASC'),
+        all: () => rep.any('SELECT * FROM ec2_servers ORDER BY instance_id ASC'),
 
         // Insert or update a record
         upsert: values => rep.none(sql.upsert,values),
