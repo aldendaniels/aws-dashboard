@@ -12,7 +12,7 @@ module.exports = rep => {
         create: () => rep.none(sql.create),
 
         // Returns all server records which are not soft deleted
-        all: () => rep.any('SELECT * FROM ec2_servers WHERE deleted = FALSE ORDER BY instance_id ASC'),
+        all: () => rep.any('SELECT * FROM ec2_servers WHERE deleted = FALSE ORDER BY state, instance_id ASC'),
 
         // Insert or update a record
         upsert: values => rep.none(sql.upsert,values),
