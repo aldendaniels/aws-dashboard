@@ -7,10 +7,9 @@
         <input type="text" class="form-control" name="name" placeholder="Name" value="{{input.name}}" required autofocus="" />
         <input type="text" class="form-control" name="email" placeholder="Email" value="{{input.email}}" type="email" required />
         <input type="password" class="form-control" name="password" placeholder="Password" value="{{input.password}}" required />
+        <input type="text" class="form-control" name="token" placeholder="Invite Token" value="{{input.token}}" required />
         <p class="text-center text-danger">
-          {{#each errors}}
-            {{this}}<br />
-          {{/each}}
+          {{this.errors}}
         </p>
 
         <button class="btn btn-lg btn-success btn-block"  name="Submit" value="Create" type="Submit">Create</button>

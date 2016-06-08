@@ -4,7 +4,8 @@ var promise = require('bluebird');
 var models = {
     servers: require('./models/servers'),
     commits: require('./models/commits'),
-    users: require('./models/users')
+    users: require('./models/users'),
+    tokens: require('./models/tokens')
 };
 
 var options = {
@@ -15,6 +16,7 @@ var options = {
         obj.servers = models.servers(obj);
         obj.commits = models.commits(obj);
         obj.users = models.users(obj);
+        obj.tokens = models.tokens(obj);
     }
 };
 

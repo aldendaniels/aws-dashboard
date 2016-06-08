@@ -8,15 +8,28 @@ exports.addUser = function(user, next) {
             return next(err);
         }
 
-        db.users.insert({
-            name: user.name,
-            email: user.email.toLowerCase(),
-            password: hash
-        }).then(function(data){
-            next(null);
-        }).catch(function(err){
-            return next(err);
-        });
+        db.tokens.claim({email: user.email.toLowerCase(), token: user.token})
+            .then(function(data){
+
+                if(data && data.email == user.email){
+                    
+                    return db.users.insert({
+                        name: user.name,
+                        email: user.email.toLowerCase(),
+                        password: hash
+                    });
+
+                } else {
+                    // If we don't match the token then this is an invalid one
+                    throw new Error('You have provided an invalid token, '+
+                        'or it is not associated with this email.');
+                }
+
+            }).then(function(data){
+                next(null);
+            }).catch(function(err){
+                return next(err);
+            });
         
     });
 };
