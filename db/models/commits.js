@@ -23,6 +23,6 @@ module.exports = rep => {
             values),
 
         // Insert if not already present
-        insert: values => rep.one(sql.insert,values)
+        insert: values => rep.none(sql.insert,values)
     };
 };

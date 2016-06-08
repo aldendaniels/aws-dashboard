@@ -1,5 +1,6 @@
 INSERT INTO ec2_servers AS ec2 (
   instance_id,
+  name,
   availability_zone,
   state,
   public_ip,
@@ -10,6 +11,7 @@ INSERT INTO ec2_servers AS ec2 (
   deleted
   )
 VALUES (${instance_id},
+        ${name},
         ${availability_zone},
         ${state},
         ${public_ip},
@@ -17,22 +19,24 @@ VALUES (${instance_id},
         ${launch_time},
         ${state_transition},
         NOW(),
-        false) 
+        FALSE) 
 ON conflict (instance_id) DO
 UPDATE
-SET (availability_zone,
+SET (name,
+     availability_zone,
      state,
      public_ip,
      public_url,
      launch_time,
      state_transition,
      last_updated,
-     deleted) = (${availability_zone},
+     deleted) = (${name},
+                      ${availability_zone},
                       ${state},
                       ${public_ip},
                       ${public_url},
                       ${launch_time},
                       ${state_transition},
                       NOW(),
-                      false)
+                      FALSE)
 WHERE ec2.instance_id = ${instance_id}

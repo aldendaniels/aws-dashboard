@@ -9,6 +9,7 @@ var awsService = require('../services/aws-service');
 var githubService = require('../services/github-service');
 var config = require('../config');
 var htmlencode = require('htmlencode');
+var db = require('../db').db;
 
 // Load the express router
 var router = express.Router();
@@ -36,22 +37,51 @@ router.post('/launch', function(req, res, next) {
     if(/^([a-fA-F0-9]{41})$/.test(req.body.commit)){
         throw new Error('Not a valid git sha1 hash.');
     }
-    
-    var launchAMI = awsService.launchAMI(
-        config.deploymentRepo.owner, // TODO: make owner dynamic, for now hardcoded
-        config.deploymentRepo.repo, // TODO: make repo dynamic
-        req.body.commit,
-        htmlencode.htmlEncode(req.body.instanceName), // HTML Encode the Instance Name for Safety
-        false, // This is not a dry run 
-        next);
-    
-    launchAMI.then(function(data){
-        awsService.updateRunningServers(next);
-         res.redirect("/");
+
+    db.servers.runningCount().then(function(data){
+        console.log(data.count);
+        if(data.count <= config.maxRunningInstances){
+            return awsService.launchAMI(
+                config.deploymentRepo.owner, // TODO: make owner dynamic, for now hardcoded
+                config.deploymentRepo.repo, // TODO: make repo dynamic
+                req.body.commit,
+                htmlencode.htmlEncode(req.body.instanceName), // HTML Encode the Instance Name for Safety
+                false, // This is not a dry run 
+                next);
+        } else {
+            throw new Error('Launching this server will make too many running servers');
+        }
+
+    }).then(function(data){
+        // Go ahead and insert this, it will get updated with more info
+        return db.servers.upsert({
+            instance_id: data.Instances[0].InstanceId,
+            name: req.body.instanceName,
+            availability_zone: null,
+            state: null,
+            public_ip: null,
+            public_url: null,
+            launch_time: null,
+            state_transition: null
+        });
+
+    }).then(function(data){
+        res.redirect("/");
     }).catch(function(err){
         return next(err);
     });
+    
+});
 
+/**
+ * Launch a server with a specific commit
+ */
+router.get('/terminate/:instanceId', function(req, res, next) {
+    // Return after we have confirmation
+    awsService.terminateInstance(req.params.instanceId, false, next)
+        .then(function(data){
+            res.redirect("/");
+        });
 });
 
 /**

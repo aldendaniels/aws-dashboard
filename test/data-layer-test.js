@@ -39,7 +39,7 @@ describe('Database', function() {
         it('Does not error on attempt to get rows', function() {
             return db.servers.all()
                 .then(function(data) {
-                    assert(data != null, "Should return at least empty array");
+                    assert.isNotNull(data, "Should return at least empty array");
                 });
         });
     });

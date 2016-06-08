@@ -20,12 +20,15 @@ config.postgres = {
 config.github = {
     username: '[USERNAME]',
     password: '[PASSWORD]'
-}
+};
 
 // Deployment Repository
 config.deploymentRepo = {
   owner: '[OWNER]',
-  repo: '[REPO]'
-}
+  repo: '[REPO]',
+};
+
+// Maximum running instances
+config.maxRunningInstances = 4;
 
 module.exports = config;
