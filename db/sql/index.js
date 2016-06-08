@@ -33,5 +33,8 @@ module.exports = {
     commits: {
         create: sql('commits/create.sql'),
         insert: sql('commits/insert.sql')
+    },
+    users: {
+        insert: sql('users/insert.sql')
     }
 };

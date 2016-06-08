@@ -47,6 +47,7 @@ describe('AWS', function() {
                 'treyreynolds', 
                 'node-helloworld', 
                 '93f56218ecd3d747310e02e1070e74b11f36039d',
+                'Test Instance',
                 true, // This is dry run
                 null);
 
@@ -56,4 +57,5 @@ describe('AWS', function() {
                 });
         });
     });
+
 });

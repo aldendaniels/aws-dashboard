@@ -21,8 +21,10 @@ module.exports = rep => {
         find: id => rep.oneOrNone('SELECT * FROM ec2_servers WHERE instance_id = $1', id),
 
         deleteNonActive: instanceIds => rep.none(
-            'UPDATE ec2_servers SET deleted = true WHERE instance_id NOT IN ($1)', 
-            instanceIds)
+            "UPDATE ec2_servers SET deleted = true WHERE instance_id NOT IN ($1:csv)", 
+            [instanceIds]),
+
+        runningCount: () => rep.one("SELECT count(*) FROM ec2_servers WHERE state = 'running'")
 
     };
 };

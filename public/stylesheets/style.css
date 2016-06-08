@@ -241,6 +241,12 @@ input[type="password"] {
     border-color: #DDD !important;
 }
 
+.panel-running>.panel-footer{
+  color: #ffffff;
+  background-color: #18bc9c !important;
+  border-color: #18bc9c !important;
+}
+
 .panel-stopping>.panel-footer,
 .panel-stopped>.panel-footer,
 .panel-terminated>.panel-footer {

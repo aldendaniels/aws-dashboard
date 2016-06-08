@@ -6,17 +6,24 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('hbs');
+var passport = require('passport');
 var session = require('express-session');
 var flash = require('connect-flash');
 
 // Recurring CRON-like scheduled tasks
 var tasks = require('./tasks');
 
-
 // Load our routes
 var config = require('./config');
 var routes = require('./routes/index');
+var users = require('./routes/users');
+var home = require('./routes/home');
 var api = require('./routes/api');
+
+// Passport setup
+var passportConfig = require('./auth/passport-config');
+var restrict = require('./auth/restrict');
+passportConfig();
 
 var app = express();
 
@@ -41,7 +48,15 @@ app.use(session(
 ));
 
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', routes);
+app.use('/users', users);
+
+// Everything below the "restrict" will require login
+app.use(restrict);
+app.use('/home', home);
 app.use('/api', api);
 
 // catch 404 and forward to error handler

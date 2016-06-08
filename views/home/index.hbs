@@ -1,0 +1,53 @@
+<div class="row">
+  <div class="col-sm-4">
+    {{> sidebar c=commits}}
+  </div>
+  <div class="col-sm-8">
+     {{#each servers}}
+      <div class="col-md-6">
+          <div class="panel text-center panel-default panel-{{this.state}}">
+            <div class="panel-heading text-left">
+            {{#if this.name}}
+              {{this.name}}
+            {{else}}
+              {{this.instance_id}}
+            {{/if}}
+            {{#if this.public_ip}}
+              <a class="text-danger pull-right" href="/api/terminate/{{this.instance_id}}">
+                <i class="fa fa-lg fa-times-circle" aria-hidden="true"></i>
+              </a>
+            {{/if}}
+            </div>
+            <div class="panel-body text-left server">
+              <div class="row stats">
+                <div class="col-xs-12">
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <span class="badge">{{this.instance_id}}</span>
+                      Instance ID
+                    </li>
+                    <li class="list-group-item">
+                      <span class="badge">{{this.public_ip}}</span>
+                      IP Address
+                    </li>
+                    <li class="list-group-item">
+                      <span class="badge">{{this.availability_zone}}</span>
+                      Zone
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="panel-footer text-info text-left">
+              State: {{this.state}}
+              {{#if this.public_ip}}
+                <a class="pull-right" style="color: #000" href="http://{{this.public_ip}}/" target="_blank">
+                  Launch App <i class="fa fa-external-link" aria-hidden="true"></i>
+                </a>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      {{/each}}
+  </div>
+</div>

@@ -63,7 +63,7 @@ exports.launchAMI = function(username, repo, commit, instanceName, dryRun, next)
         }
     });
 
-    return runInstances
+    return runInstances;
 };
 
 /**
@@ -87,35 +87,52 @@ exports.updateRunningServers = function(next) {
         return [instanceIds,ec2.describeInstances({InstanceIds:instanceIds}).promise()];
 
     }).spread(function(instanceIds, data){
+        return db.task(function (t) {
+            var queries = [];
 
-        data.Reservations.forEach(function(reservation){
-            reservation.Instances.forEach(function(instance){
-
-                db.servers.upsert({
-                    instance_id: instance.InstanceId,
-                    availability_zone: instance.Placement.AvailabilityZone,
-                    state: instance.State.Name,
-                    public_ip: instance.PublicIpAddress,
-                    public_url: instance.PublicDnsName,
-                    launch_time: instance.LaunchTime,
-                    state_transition: instance.StateTransitionReason
-                }).then(function (data) {
-                    // No data is returned from the upsert
-                }).catch(function (err) {
-                    // If we are calling from the cron side we just need to log errors
-                    console.log(err);
-
+            // Loop through all reservations and instances inside
+            data.Reservations.forEach(function(reservation){
+                reservation.Instances.forEach(function(instance){
+                    queries.push(db.servers.upsert({
+                        instance_id: instance.InstanceId,
+                        name: (instance.Tags[0])?instance.Tags[0].Value:'',
+                        availability_zone: instance.Placement.AvailabilityZone,
+                        state: instance.State.Name,
+                        public_ip: instance.PublicIpAddress,
+                        public_url: instance.PublicDnsName,
+                        launch_time: instance.LaunchTime,
+                        state_transition: instance.StateTransitionReason
+                    }));
                 });
             });
-        });
 
-        //db.servers.deleteNonActive(instanceIds);
-       
+            queries.push(db.servers.deleteNonActive(instanceIds));
+            return t.batch(queries);
+
+        });
+    }).then(function(data){
+        //console.log(data);
     }).catch(function(err){
         console.log(err);
-    });
-           
+    });  
 
     // Return the promise
     return runningServers;
+};
+
+/**
+ * Terminates a specific instance
+ *
+ * @method     terminateInstance
+ * @param      {instanceId}   github username where repo lives
+ * @return     {Promise}    return the promise object of the launch command
+ */
+exports.terminateInstance = function(instanceId, dryRun, next) {
+    var params = {
+        InstanceIds: [instanceId],
+        DryRun: dryRun
+    };
+    var terminate = ec2.terminateInstances(params).promise();
+
+    return terminate;
 };
