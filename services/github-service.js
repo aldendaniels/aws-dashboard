@@ -32,10 +32,10 @@ exports.getCommits = function(username, repository, next) {
                 commit_author: commit.committer.login,
                 avatar_url: commit.committer.avatar_url,
                 author_name: commit.commit.committer.name,
-                date: commit.commit.committer.date,
                 message: commit.commit.message,
                 repository: repository,
-                owner: username
+                owner: username,
+                commit_date: commit.commit.committer.date
             }).then(function(data){
                 //console.log(data);
             }).catch(function(err){

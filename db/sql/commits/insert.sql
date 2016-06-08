@@ -1,4 +1,4 @@
-INSERT INTO commits AS c (sha, message, commit_author, author_name, avatar_url, repository, owner, created) 
+INSERT INTO commits AS c (sha, message, commit_author, author_name, avatar_url, repository, owner, commit_date) 
 SELECT ${sha},
         ${message},
         ${commit_author},
@@ -6,5 +6,5 @@ SELECT ${sha},
         ${avatar_url},
         ${repository},
         ${owner},
-        NOW()
+        ${commit_date}
 WHERE NOT EXISTS (SELECT sha from commits WHERE sha = ${sha});

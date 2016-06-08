@@ -101,7 +101,9 @@ exports.updateRunningServers = function(next) {
                         public_ip: instance.PublicIpAddress,
                         public_url: instance.PublicDnsName,
                         launch_time: instance.LaunchTime,
-                        state_transition: instance.StateTransitionReason
+                        state_transition: instance.StateTransitionReason,
+                        commit_hash: null // This is only null in the case of an server
+                                         // which came from the EC2 interface only.
                     }));
                 });
             });

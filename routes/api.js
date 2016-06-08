@@ -40,7 +40,9 @@ router.post('/launch', function(req, res, next) {
 
     db.servers.runningCount().then(function(data){
         console.log(data.count);
-        if(data.count <= config.maxRunningInstances){
+
+        // Security check to limit max running instances
+        if(data.count < config.maxRunningInstances){
             return awsService.launchAMI(
                 config.deploymentRepo.owner, // TODO: make owner dynamic, for now hardcoded
                 config.deploymentRepo.repo, // TODO: make repo dynamic
@@ -62,7 +64,8 @@ router.post('/launch', function(req, res, next) {
             public_ip: null,
             public_url: null,
             launch_time: null,
-            state_transition: null
+            state_transition: null,
+            commit_hash: req.body.commit
         });
 
     }).then(function(data){

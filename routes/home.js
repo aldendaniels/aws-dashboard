@@ -25,6 +25,7 @@ router.get('/', function(req, res, next) {
             title: 'Home',
             servers: servers,
             commits: commits,
+            repo: config.deploymentRepo.owner + '/' + config.deploymentRepo.repo,
             error: req.flash('error'),
             name: req.user ? req.user.name : 'test'
         };

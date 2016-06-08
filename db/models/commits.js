@@ -12,14 +12,14 @@ module.exports = rep => {
         create: () => rep.none(sql.create),
 
         // Returns all commits
-        all: () => rep.any('SELECT * FROM commits ORDER BY created ASC'),
+        all: () => rep.any('SELECT * FROM commits ORDER BY commit_date DESC'),
 
         // Tries to find a commit from sha;
         find: id => rep.oneOrNone('SELECT * FROM commits WHERE sha = $1', id),
 
         // Returns commits per repository
         findByOwnerAndRepo: values => rep.any(
-            'SELECT * FROM commits WHERE owner = ${owner} AND repository = ${repository}',
+            'SELECT * FROM commits WHERE owner = ${owner} AND repository = ${repository} ORDER BY commit_date DESC',
             values),
 
         // Insert if not already present

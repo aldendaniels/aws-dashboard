@@ -7,6 +7,7 @@ INSERT INTO ec2_servers AS ec2 (
   public_url,
   launch_time,
   state_transition,
+  commit_hash,
   last_updated,
   deleted
   )
@@ -18,6 +19,7 @@ VALUES (${instance_id},
         ${public_url},
         ${launch_time},
         ${state_transition},
+        ${commit_hash},
         NOW(),
         FALSE) 
 ON conflict (instance_id) DO
