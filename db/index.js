@@ -3,7 +3,8 @@ var promise = require('bluebird');
 
 var models = {
     servers: require('./models/servers'),
-    commits: require('./models/commits')
+    commits: require('./models/commits'),
+    users: require('./models/users')
 };
 
 var options = {
@@ -13,6 +14,7 @@ var options = {
         // and transaction being executed, which should be as fast as possible.
         obj.servers = models.servers(obj);
         obj.commits = models.commits(obj);
+        obj.users = models.users(obj);
     }
 };
 
