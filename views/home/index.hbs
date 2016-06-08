@@ -35,12 +35,14 @@
                       Zone
                     </li>
                     <li class="list-group-item">
+                      {{#if this.commit_hash}}
                       <span class="pull-right">
                         <a href="http://www.github.com/{{../repo}}/commit/{{this.commit_hash}}">
                         {{../repo}} <i class="fa fa-external-link" aria-hidden="true"></i>
                         </a>
                       </span>
-                      Commit
+                      {{/if}}
+                      App Version
                     </li>
                   </ul>
                 </div>
