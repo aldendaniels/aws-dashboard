@@ -20,21 +20,23 @@ function sql(file) {
     };
 
     return new QueryFile(path, options);
-
-    // See QueryFile API:
-    // http://vitaly-t.github.io/pg-promise/QueryFile.html
 }
 
 module.exports = {
     servers: {
-        create: sql('servers/create.sql'),
+        create: sql('servers/create_table.sql'),
         upsert: sql('servers/upsert.sql')
     },
     commits: {
-        create: sql('commits/create.sql'),
+        create: sql('commits/create_table.sql'),
         insert: sql('commits/insert.sql')
     },
     users: {
+        create: sql('users/create_table.sql'),
         insert: sql('users/insert.sql')
+    },
+    tokens: {
+        create: sql('tokens/create_table.sql'),
+        insert: sql('tokens/insert.sql')
     }
 };

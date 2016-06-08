@@ -4,11 +4,7 @@ var passport = require('passport');
 var config = require('../config.js');
 var userService = require('../services/user-service');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-
+/* GET User Create Form */
 router.get('/create', function(req, res, next) {
   var vm = {
     title: 'Create an account'
@@ -20,11 +16,10 @@ router.get('/create', function(req, res, next) {
 router.post('/create', function(req, res, next) {
   userService.addUser(req.body, function(err) {
     if (err) {
-      console.log(err);
       var vm = {
         title: 'Create an account',
         input: req.body,
-        error: err
+        errors: err
       };
       delete vm.input.password;
       return res.render('users/create', vm);
@@ -38,7 +33,7 @@ router.post('/create', function(req, res, next) {
 /* POST users login. */
 router.post('/login',
   function(req,res,next){
-    req.session.personName = 'Rick Sanchez';
+    req.session.personName = 'User';
     if (req.body.rememberMe) {
       req.session.cookie.maxAge = config.cookieMaxAge;
     }
